@@ -8,6 +8,12 @@ import com.sopra.java.patterns.model.entities.Persona;
 public class MemoryPersonaDAO implements IDaoPersonas{
 	
 	private Map<String, Persona> mapaPersonas;
+	
+	public MemoryPersonaDAO(Map<String, Persona> mapaPersonas) {
+		super();
+		this.mapaPersonas = mapaPersonas;
+	}
+
 	@Override
 	public void insert(Persona persona) {
 		mapaPersonas.putIfAbsent(persona.getDni(), persona);

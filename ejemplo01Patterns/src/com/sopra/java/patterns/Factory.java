@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.sopra.java.patterns.model.dao.IDao;
+import com.sopra.java.patterns.model.dao.IDaoPersonas;
 import com.sopra.java.patterns.model.dao.MemoryListLogDAO;
 import com.sopra.java.patterns.model.dao.MemoryMapDAO;
+import com.sopra.java.patterns.model.dao.MemoryPersonaDAO;
 import com.sopra.java.patterns.model.entities.Clasroom;
 import com.sopra.java.patterns.model.entities.LineaDeLog;
+import com.sopra.java.patterns.model.entities.Persona;
 
 public class Factory {
 	public static IDao<Clasroom> getDaoDeAula(){		
@@ -16,5 +19,8 @@ public class Factory {
 	
 	public static IDao<LineaDeLog> getDaoDeLog(){
 		return new MemoryListLogDAO(new ArrayList<>());
+	}
+	public static IDaoPersonas getDaoDePersonas() {
+		return new MemoryPersonaDAO(new HashMap<String, Persona>());
 	}
 }
