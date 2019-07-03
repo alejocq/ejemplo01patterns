@@ -1,30 +1,50 @@
 package com.sopra.java.patterns.business;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.sopra.java.patterns.Factory;
-import com.sopra.java.patterns.model.dao.IDao;
-import com.sopra.java.patterns.model.dao.IDaoPersonas;
-import com.sopra.java.patterns.model.entities.LineaDeLog;
-import com.sopra.java.patterns.model.entities.Nivel;
+import com.sopra.java.patterns.model.dao.IMultipleDao;
+import com.sopra.java.patterns.model.entities.Alumno;
 import com.sopra.java.patterns.model.entities.Persona;
+import com.sopra.java.patterns.model.entities.Profesor;
 
 public class GestionPersonas {
-	private IDaoPersonas miDaoDePersonas = Factory.getDaoDePersonas();
-	private IDao<LineaDeLog>miDaoDeLogs = Factory.getDaoDeLog();
+	private IMultipleDao<Persona, String> personaDao;
 	
-	public Persona crearAlumno(String dni, String nombre, Boolean profesor) {
-		Persona alumno = new Persona();
-		alumno.setDni(dni);
-		alumno.setNombre(nombre);
-		alumno.setEsProfesor(profesor);
-		miDaoDePersonas.insert(alumno);
-		if(profesor) {
-			miDaoDeLogs.insert(new LineaDeLog(Nivel.INFO, "Profesor agregado", "log de profesores"));
-			return alumno;
-		}		
-		miDaoDeLogs.insert(new LineaDeLog(Nivel.INFO, "Alumno agregado", "log de alumnos"));
-		return alumno;
+	public GestionPersonas() {
+		this.personaDao = Factory.getPersonaDao();
+	}
+	public void crearAlumno(String dni, String nombre) {
+		personaDao.insert(new Alumno(nombre, dni));
 		
 	}
-	
-	
+	public void crearProfesor(String dni, String nombre) {
+		personaDao.insert(new Profesor(nombre, dni));
+	}
+	public Set<Persona> listarPersonas(){
+		return new HashSet<Persona>(personaDao.list());
+	}
+	public Set<Profesor> listaProfesores(){
+		Set<Profesor> profesores = new HashSet<>();
+		for(Persona persona : personaDao.list()) {
+			if(persona instanceof Profesor) {
+				Profesor profesor = (Profesor) persona;
+				profesores.add(profesor);
+			}
+			
+		}
+		return profesores;
+	}
+	public Set<Alumno> listaAlumnos(){
+		Set<Alumno> alumnos = new HashSet<>();
+		for(Persona persona : personaDao.list()) {
+			if(persona instanceof Alumno) {
+				Alumno alumno = (Alumno) persona;
+				alumnos.add(alumno);
+			}
+			
+		}
+		return alumnos;
+	}
 }

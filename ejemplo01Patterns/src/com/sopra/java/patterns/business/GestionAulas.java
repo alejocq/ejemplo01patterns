@@ -2,11 +2,13 @@ package com.sopra.java.patterns.business;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
 import com.sopra.java.patterns.Factory;
 import com.sopra.java.patterns.model.dao.IDao;
+import com.sopra.java.patterns.model.dao.IGenericDao;
 import com.sopra.java.patterns.model.entities.Clasroom;
 import com.sopra.java.patterns.model.entities.LineaDeLog;
 import com.sopra.java.patterns.model.entities.Nivel;
@@ -14,7 +16,7 @@ import com.sopra.java.patterns.model.entities.Puesto;
 
 public class GestionAulas {
 	private IDao<Clasroom> miDaoDeAulas = Factory.getDaoDeAula();
-	private IDao<LineaDeLog>miDaoDeLogs = Factory.getDaoDeLog(); //Factory.
+	private IGenericDao<LineaDeLog> miDaoDeLogs = Factory.getDaoDeLog(); //Factory.
 	/*
 	public GestionAulas(IDao<Clasroom> miDaoDeAulas, IDao<LineaDeLog> miDaoDeLogs) {
 		super();
@@ -34,7 +36,7 @@ public class GestionAulas {
 		aula.setPuestoDeProfesor(new Puesto());
 		aula.setPuestosDeAlumnos(puestosDeAlumnos);
 		miDaoDeAulas.insert(aula);
-		miDaoDeLogs.insert(new LineaDeLog(Nivel.INFO, "Aula agregada", "log de aulas"));
+		miDaoDeLogs.insert(new LineaDeLog(new Date(), Nivel.INFO, "Aula agregada", "log de aulas"));
 		return aula;
 	}
 	public Collection<Clasroom> dameAulas(List<String> nombresDeAulas){

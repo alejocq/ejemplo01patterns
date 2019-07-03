@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.sopra.java.patterns.model.entities.LineaDeLog;
 
-public class MemoryListLogDAO implements IDao<LineaDeLog> {
+public class MemoryListLogDAO implements IMultipleDao<LineaDeLog, Integer> {
 	
 	private List<LineaDeLog> almacenDeLogs;
 	
@@ -25,8 +25,9 @@ public class MemoryListLogDAO implements IDao<LineaDeLog> {
 
 	@Override
 	public LineaDeLog update(LineaDeLog elemento) {
-		if(almacenDeLogs.remove(elemento)) {
-			almacenDeLogs.add(elemento);
+		if(almacenDeLogs.contains(elemento)) {
+			int posicion = almacenDeLogs.indexOf(elemento);
+			almacenDeLogs.add(posicion, elemento);
 			return elemento;
 		}
 		return null;
@@ -43,14 +44,26 @@ public class MemoryListLogDAO implements IDao<LineaDeLog> {
 	}
 
 	@Override
-	public Collection<LineaDeLog> search(LineaDeLog elemento) {
-		Collection<LineaDeLog> coleccion = new ArrayList<>();
-		almacenDeLogs.contains(elemento);
-		int indexof = almacenDeLogs.indexOf(elemento);
-		LineaDeLog logEncontrado = almacenDeLogs.get(indexof);
-		coleccion.add(logEncontrado);
-		
-		return coleccion;
+	public List<LineaDeLog> searchByNames(String name) {
+		List<LineaDeLog> listaDeLogs = new ArrayList<LineaDeLog>();
+		for(LineaDeLog lineaActual : almacenDeLogs) {
+			if(lineaActual.getNombre().equals(name)) {
+				listaDeLogs.add(lineaActual);
+			}
+		}
+		return null;
 	}
+
+	@Override
+	public LineaDeLog searchById(Integer id) {
+		LineaDeLog log = null;
+		for(int i = 0; i < almacenDeLogs.size() || log == null ; i++) {
+			if(almacenDeLogs.get(i).getId().equals(id)) {
+				log = almacenDeLogs.get(i);
+			}
+		}
+		return log;
+	}
+
 
 }

@@ -1,40 +1,65 @@
 package com.sopra.java.patterns.model.dao;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.sopra.java.patterns.model.entities.Persona;
 
-public class MemoryPersonaDAO implements IDaoPersonas{
+public class MemoryPersonaDAO implements IMultipleDao<Persona, String>{
 	
-	private Map<String, Persona> mapaPersonas;
+	private Map<String, Persona> almacenDepersonas;
 	
-	public MemoryPersonaDAO(Map<String, Persona> mapaPersonas) {
+	
+	public MemoryPersonaDAO(Map<String, Persona> almacenDepersonas) {
 		super();
-		this.mapaPersonas = mapaPersonas;
+		this.almacenDepersonas = almacenDepersonas;
 	}
 
 	@Override
-	public void insert(Persona persona) {
-		mapaPersonas.putIfAbsent(persona.getDni(), persona);
+	public void insert(Persona elemento) {
+		almacenDepersonas.putIfAbsent(elemento.getDni(), elemento);
 		
 	}
 
 	@Override
-	public Persona update(Persona persona) {
-		mapaPersonas.replace(persona.getDni(), persona);
-		return persona;
+	public Persona update(Persona elemento) {
+		if(almacenDepersonas.replace(elemento.getDni(), elemento) != null) {
+			return elemento;
+		}
+		return null;
 	}
 
 	@Override
-	public void delete(Persona persona) {
-		mapaPersonas.remove(persona.getDni());
+	public void delete(Persona elemento) {
+		almacenDepersonas.remove(elemento.getDni());
 		
 	}
 
 	@Override
 	public Collection<Persona> list() {
-		return mapaPersonas.values();		
+		
+		return almacenDepersonas.values();
 	}
+
+	@Override
+	public List<Persona> searchByNames(String name) {
+		List<Persona> lista = new ArrayList<>();
+		for(Persona persona : almacenDepersonas.values()) {
+			if(persona.getNombre().equals(name)) {
+				lista.add(persona);
+			}
+		}
+		return lista;
+	}
+
+	@Override
+	public Persona searchById(String id) {		
+		return almacenDepersonas.get(id);
+	}
+	
+	
+	
 
 }
